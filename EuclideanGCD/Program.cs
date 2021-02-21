@@ -2,7 +2,7 @@
 
 namespace EuclideanGCD
 {
-    static class CalculationGCD
+    static class EuclideanGCD
     {
         public static int CalculateGCD(int numberA, int numberB)
         {
@@ -50,14 +50,61 @@ namespace EuclideanGCD
             return first;
         }
     }
+    static class SteinGCD
+    {
+        public static int CalculateGCD(int numA, int numB)
+        {
+            if (numA == 0)
+                return numB;
+            if (numB == 0)
+                return numA;
+            int result;
+            for (result = 0; ((numA | numB) & 1) == 0; ++result)
+            {
+                numA >>= 1;
+                numB >>= 1;
+            }
+            while ((numA & 1) == 0)
+                numA >>= 1;
+            do
+            {
+                while ((numB & 1) == 0)
+                    numB >>= 1;
+                if (numA > numB)
+                {
+
+                    int temp = numA;
+                    numA = numB;
+                    numB = temp;
+                }
+                numB -= numA;
+            } while (numB != 0);
+            return numA << result;
+        }
+    }
     class Program
     {
         private static int[] InputNumbers()
         {
             Console.WriteLine("Enter numbers: ");
             string line = Console.ReadLine();
-            string[] srtArray = line.Split(',');
-            return Array.ConvertAll(srtArray, int.Parse);
+            CheckException(line);
+            string[] strArray = line.Split(',');
+            return Array.ConvertAll(strArray, int.Parse);
+        }
+        private static void CheckException(string line)
+        {
+            foreach (var item in line)
+            {
+                if (char.IsLetter(item) || char.IsWhiteSpace(item))
+                {
+                    throw new FormatException(message: "Invalid symbol or space");
+                }
+                if (char.IsPunctuation(item) && item != ',')
+                {
+                    throw new FormatException(message: $"Invalid symbol: {item}");
+                }
+            }
         }
         private static int FindMethod(int[] myList)
         {
@@ -65,21 +112,28 @@ namespace EuclideanGCD
             switch (length)
             {
                 case 3:
-                    return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2]);
+                    return EuclideanGCD.CalculateGCD(myList[0], myList[1], myList[2]);
                 case 4:
-                    return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3]);
+                    return EuclideanGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3]);
                 case 5:
-                    return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3], myList[4]);
+                    return EuclideanGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3], myList[4]);
                 default:
                     break;
             }
-            return CalculationGCD.CalculateGCD(myList[0], myList[1]);
+            return EuclideanGCD.CalculateGCD(myList[0], myList[1]);
         }
         static void Main()
         {
-            int[] numbersList = InputNumbers();
-            int result = FindMethod(numbersList);
-            Console.WriteLine($"GCD is: {result}");
+            try
+            {
+                int[] numbersList = InputNumbers();
+                int result = FindMethod(numbersList);
+                Console.WriteLine($"GCD is: {result}");
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
