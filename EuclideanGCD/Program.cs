@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace EuclideanGCD
 {
     static class CalculationGCD
     {
-        internal static int CalculateGCD(int numberA, int numberB)
+        public static int CalculateGCD(int numberA, int numberB)
         {
             while (numberA != 0 && numberB != 0)
             {
@@ -20,7 +19,7 @@ namespace EuclideanGCD
             }
             return numberA + numberB;
         }
-        internal static int CalculateGCD(int numA, int numB, int numC)
+        public static int CalculateGCD(int numA, int numB, int numC)
         {
             int first = CalculateGCD(numA, numB);
             int second = CalculateGCD(numB, numC);
@@ -30,7 +29,7 @@ namespace EuclideanGCD
             }
             return first;
         }
-        internal static int CalculateGCD(int numA, int numB, int numC, int numD)
+        public static int CalculateGCD(int numA, int numB, int numC, int numD)
         {
             int first = CalculateGCD(numA, numB, numC);
             int second = CalculateGCD(numB, numC, numD);
@@ -40,59 +39,46 @@ namespace EuclideanGCD
             }
             return first;
         }
-        //переписать
-        internal static int CalculateGCD(int numA, int numB, int numC, int numD, int numE)
+        public static int CalculateGCD(int numA, int numB, int numC, int numD, int numE)
         {
             int first = CalculateGCD(numA, numB, numC);
             int second = CalculateGCD(numC, numD, numE);
-            return first == second ? first : 1;
+            if (first != second)
+            {
+                return CalculateGCD(first, second);
+            }
+            return first;
         }
     }
     class Program
     {
-        /*
-         public static List<int> InputNumbers()
-         {
-             List<int> list = new List<int>();
-             Console.WriteLine("Enter first number: ");
-             string line = Console.ReadLine();
-             while (line != string.Empty)
-             {
-                 list.Add(int.Parse(line));
-                 Console.WriteLine("Enter next number:");
-                 line = Console.ReadLine();
-             }
-             return list;
-         }
-        */
-        public static int[] InputNumbers()
+        private static int[] InputNumbers()
         {
             Console.WriteLine("Enter numbers: ");
             string line = Console.ReadLine();
-            string[] srtArray = line.Split(' ');
+            string[] srtArray = line.Split(',');
             return Array.ConvertAll(srtArray, int.Parse);
         }
-        public static int FindMethode(int[] myList)
+        private static int FindMethod(int[] myList)
         {
             int length = myList.Length;
-            if (length == 3)
+            switch (length)
             {
-                return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2]);
-            }
-            if (length == 4)
-            {
-                return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3]);
-            }
-            if (length == 5)
-            {
-                return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3], myList[4]);
+                case 3:
+                    return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2]);
+                case 4:
+                    return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3]);
+                case 5:
+                    return CalculationGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3], myList[4]);
+                default:
+                    break;
             }
             return CalculationGCD.CalculateGCD(myList[0], myList[1]);
         }
         static void Main()
         {
             int[] numbersList = InputNumbers();
-            int result = FindMethode(numbersList);
+            int result = FindMethod(numbersList);
             Console.WriteLine($"GCD is: {result}");
         }
     }
