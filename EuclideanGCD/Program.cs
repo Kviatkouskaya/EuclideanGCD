@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace EuclideanGCD
 {
@@ -49,15 +50,41 @@ namespace EuclideanGCD
             }
             return first;
         }
+        public static int FindMethod(int[] myList)
+        {
+            int length = myList.Length;
+            switch (length)
+            {
+                case 3:
+                    return CalculateGCD(myList[0], myList[1], myList[2]);
+                case 4:
+                    return CalculateGCD(myList[0], myList[1], myList[2], myList[3]);
+                case 5:
+                    return CalculateGCD(myList[0], myList[1], myList[2], myList[3], myList[4]);
+                default:
+                    break;
+            }
+            return CalculateGCD(myList[0], myList[1]);
+        }
     }
     static class SteinGCD
     {
-        public static int CalculateGCD(int numA, int numB)
+        public static int CalculateGCD(int numA, int numB, out TimeSpan time)
         {
+            Stopwatch timeWatch = new Stopwatch();
+            timeWatch.Start();
             if (numA == 0)
+            {
+                timeWatch.Stop();
+                time = timeWatch.Elapsed;
                 return numB;
+            }
             if (numB == 0)
+            {
+                timeWatch.Stop();
+                time = timeWatch.Elapsed;
                 return numA;
+            }
             int result;
             for (result = 0; ((numA | numB) & 1) == 0; ++result)
             {
@@ -79,6 +106,8 @@ namespace EuclideanGCD
                 }
                 numB -= numA;
             } while (numB != 0);
+            timeWatch.Stop();
+            time = timeWatch.Elapsed;
             return numA << result;
         }
     }
@@ -106,34 +135,38 @@ namespace EuclideanGCD
                 }
             }
         }
-        private static int FindMethod(int[] myList)
-        {
-            int length = myList.Length;
-            switch (length)
-            {
-                case 3:
-                    return EuclideanGCD.CalculateGCD(myList[0], myList[1], myList[2]);
-                case 4:
-                    return EuclideanGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3]);
-                case 5:
-                    return EuclideanGCD.CalculateGCD(myList[0], myList[1], myList[2], myList[3], myList[4]);
-                default:
-                    break;
-            }
-            return EuclideanGCD.CalculateGCD(myList[0], myList[1]);
-        }
-        static void Main()
+        private static void FindEuclideanGCD()
         {
             try
             {
                 int[] numbersList = InputNumbers();
-                int result = FindMethod(numbersList);
-                Console.WriteLine($"GCD is: {result}");
+                int result = EuclideanGCD.FindMethod(numbersList);
+                Console.WriteLine($"Euclidean's GCD is: {result}");
+                Console.WriteLine();
             }
             catch (FormatException e)
             {
                 Console.WriteLine(e.Message);
             }
+        }
+        public static void FindSteinGCD()
+        {
+            try
+            {
+                int[] steinList = InputNumbers();
+                int steinResult = SteinGCD.CalculateGCD(steinList[0], steinList[1],out TimeSpan time);
+                Console.WriteLine($"Stein's GCD is: {steinResult}, time: {time}");
+                Console.WriteLine();
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+        static void Main()
+        {
+            FindEuclideanGCD();
+            FindSteinGCD();
         }
     }
 }
