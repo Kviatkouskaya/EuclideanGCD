@@ -149,7 +149,7 @@ namespace EuclideanGCD
                 Console.WriteLine(e.Message);
             }
         }
-        public static void FindSteinGCD()
+        private static void FindSteinGCD()
         {
             try
             {
